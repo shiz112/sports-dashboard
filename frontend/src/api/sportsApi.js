@@ -8,6 +8,10 @@ const rapidApiHeaders = {
   'x-rapidapi-host': API_HOST
 };
 
+if (!RAPIDAPI_KEY) {
+  console.warn("⚠️ VITE_RAPIDAPI_KEY is missing! RapidAPI features (Match Details, Standings, and now Schedules) will not work.");
+}
+
 const tournamentMap = {
   pl: { id: 17, season: 76986, name: 'Premier League' },
   laliga: { id: 8, season: 77559, name: 'LaLiga' },
@@ -63,7 +67,7 @@ export const fetchSchedules = async () => {
   };
 
   try {
-    const fbRes = await axios.get(`https://api.sofascore.com/api/v1/sport/football/scheduled-events/${today}`);
+    const fbRes = await axios.get(`https://${API_HOST}/sport/football/scheduled-events/${today}`, { headers: rapidApiHeaders });
     if (fbRes.data?.events) {
       results.football = formatApiMatches(fbRes.data.events);
     }
@@ -72,7 +76,7 @@ export const fetchSchedules = async () => {
   }
 
   try {
-    const crkRes = await axios.get(`https://api.sofascore.com/api/v1/sport/cricket/scheduled-events/${today}`);
+    const crkRes = await axios.get(`https://${API_HOST}/sport/cricket/scheduled-events/${today}`, { headers: rapidApiHeaders });
     if (crkRes.data?.events) {
       results.cricket = formatApiMatches(crkRes.data.events);
     }
